@@ -6,7 +6,13 @@ import { reducer } from './reducer'
 import { GlobalStyle } from './GlobalStyle'
 import { App } from './App'
 
-const store = createStore(reducer)
+const store = createStore(
+  reducer,
+  undefined,
+  process.env.NODE_ENV === 'development'
+    ? window.__REDUX_DEVTOOLS_EXTENSION__?.()
+    : undefined,
+)
 
 ReactDOM.render(
   <Provider store={store}>
