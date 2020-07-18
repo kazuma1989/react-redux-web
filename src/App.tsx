@@ -78,6 +78,8 @@ export function App() {
         })
       }),
     )
+
+    api('PATCH /v1/cardsOrder', patch)
   }
 
   const setText = (columnID: string, value: string) => {

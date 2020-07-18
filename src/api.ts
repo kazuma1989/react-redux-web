@@ -30,6 +30,11 @@ export type ReqAndRes = {
     req: null
     res: Record<string, string>
   }
+
+  'PATCH /v1/cardsOrder': {
+    req: Record<string, string>
+    res: Record<string, string>
+  }
 }
 
 export const Endpoint = process.env.API_ENDPOINT || 'http://localhost:3000/api'
