@@ -1,5 +1,8 @@
 {
-  "scripts": {},
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
   "dependencies": {},
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
