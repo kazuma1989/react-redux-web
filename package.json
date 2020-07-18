@@ -1,5 +1,7 @@
 {
   "scripts": {},
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
 }
