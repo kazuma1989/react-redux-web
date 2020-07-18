@@ -2,7 +2,8 @@
   "scripts": {
     "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "react": "^16.13.1",
