@@ -1,25 +1,57 @@
 import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { randomID, reorderPatch } from './util'
+import { api, CardID, ColumnID } from './api'
 import * as color from './color'
 import { Button, ConfirmButton } from './Button'
 
 export function InputForm({
-  value,
-  onChange,
-  onConfirm,
+  columnID,
   onCancel,
   className,
 }: {
-  value?: string
-  onChange?(value: string): void
-  onConfirm?(): void
+  columnID: ColumnID
   onCancel?(): void
   className?: string
 }) {
+  const dispatch = useDispatch()
+  const value = useSelector(
+    state => state.columns?.find(c => c.id === columnID)?.text,
+  )
+  const cardsOrder = useSelector(state => state.cardsOrder)
+
+  const onChange = (value: string) =>
+    dispatch({
+      type: 'InputForm.SetText',
+      payload: {
+        columnID,
+        value,
+      },
+    })
+
   const disabled = !value?.trim()
   const handleConfirm = () => {
     if (disabled) return
-    onConfirm?.()
+    const text = value
+
+    const cardID = randomID() as CardID
+
+    const patch = reorderPatch(cardsOrder, cardID, cardsOrder[columnID])
+
+    dispatch({
+      type: 'InputForm.ConfirmInput',
+      payload: {
+        columnID,
+        cardID,
+      },
+    })
+
+    api('POST /v1/cards', {
+      id: cardID,
+      text,
+    })
+    api('PATCH /v1/cardsOrder', patch)
   }
 
   const ref = useAutoFitToContentHeight(value)
@@ -31,7 +63,7 @@ export function InputForm({
         autoFocus
         placeholder="Enter a note"
         value={value}
-        onChange={ev => onChange?.(ev.currentTarget.value)}
+        onChange={ev => onChange(ev.currentTarget.value)}
         onKeyDown={ev => {
           if (!((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter')) return
           handleConfirm()
