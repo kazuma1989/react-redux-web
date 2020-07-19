@@ -10,9 +10,7 @@ import { CardID } from './api'
 export function Column({
   title,
   cards: rawCards,
-  onCardDragStart,
   onCardDrop,
-  onCardDeleteClick,
   text,
   onTextChange,
   onTextConfirm,
@@ -23,9 +21,7 @@ export function Column({
     id: CardID
     text?: string
   }[]
-  onCardDragStart?(id: CardID): void
   onCardDrop?(entered: CardID | null): void
-  onCardDeleteClick?(id: CardID): void
   text?: string
   onTextChange?(value: string): void
   onTextConfirm?(): void
@@ -48,13 +44,7 @@ export function Column({
     onTextCancel?.()
   }
 
-  const [draggingCardID, setDraggingCardID] = useState<CardID | undefined>(
-    undefined,
-  )
-  const handleCardDragStart = (id: CardID) => {
-    setDraggingCardID(id)
-    onCardDragStart?.(id)
-  }
+  const draggingCardID = useSelector(state => state.draggingCardID)
 
   return (
     <Container>
@@ -81,7 +71,7 @@ export function Column({
           {filterValue && <ResultCount>{cards.length} results</ResultCount>}
 
           <VerticalScroll>
-            {cards.map(({ id, text }, i) => (
+            {cards.map(({ id }, i) => (
               <Card.DropArea
                 key={id}
                 disabled={
@@ -90,12 +80,7 @@ export function Column({
                 }
                 onDrop={() => onCardDrop?.(id)}
               >
-                <Card
-                  text={text}
-                  onDragStart={() => handleCardDragStart(id)}
-                  onDragEnd={() => setDraggingCardID(undefined)}
-                  onDeleteClick={() => onCardDeleteClick?.(id)}
-                />
+                <Card id={id} />
               </Card.DropArea>
             ))}
 
