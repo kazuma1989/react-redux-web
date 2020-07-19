@@ -212,3 +212,62 @@ test('Card.Drop', async () => {
 
   assert.deepStrictEqual(next, expected)
 })
+
+test('InputForm.ConfirmInput', async () => {
+  const prev = produce(initialState, draft => {
+    draft.cardsOrder = {
+      A: '1' as CardID,
+      '1': '2' as CardID,
+      '2': 'A' as CardID,
+      B: '3' as CardID,
+      '3': 'B' as CardID,
+    }
+    draft.columns = [
+      {
+        id: 'A' as ColumnID,
+        text: 'hello',
+        cards: [
+          {
+            id: '1' as CardID,
+          },
+          {
+            id: '2' as CardID,
+          },
+        ],
+      },
+      {
+        id: 'B' as ColumnID,
+        cards: [
+          {
+            id: '3' as CardID,
+          },
+        ],
+      },
+    ]
+  })
+
+  const next = reducer(prev, {
+    type: 'InputForm.ConfirmInput',
+    payload: {
+      columnID: 'A' as ColumnID,
+      cardID: 'new' as CardID,
+    },
+  })
+
+  const expected = produce(prev, draft => {
+    draft.cardsOrder = {
+      ...draft.cardsOrder,
+      A: 'new' as CardID,
+      new: '1' as CardID,
+    }
+
+    const column = draft.columns![0]!
+    column.text = ''
+    column.cards!.unshift({
+      id: 'new' as CardID,
+      text: 'hello',
+    })
+  })
+
+  assert.deepStrictEqual(next, expected)
+})
