@@ -51,14 +51,7 @@ export function App() {
           {!columns ? (
             <Loading />
           ) : (
-            columns.map(({ id: columnID, title, cards }) => (
-              <Column
-                key={columnID}
-                id={columnID}
-                title={title}
-                cards={cards}
-              />
-            ))
+            columns.map(({ id }) => <Column key={id} id={id} />)
           )}
         </HorizontalScroll>
       </MainArea>
